@@ -10,10 +10,11 @@ export default function CreatePage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const onSubmit = async (data: AuthorFormData) => {
+  const handleCreate = async (data: AuthorFormData) => {
     setIsSubmitting(true);
     setError(null);
     try {
+
       const res = await fetch("http://127.0.0.1:8080/api/authors", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -33,7 +34,7 @@ export default function CreatePage() {
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-6">Crear Autor</h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
-      <AuthorForm onSubmit={onSubmit} isSubmitting={isSubmitting} />
+      <AuthorForm onSubmit={handleCreate} isSubmitting={isSubmitting} />
     </div>
   );
 }
