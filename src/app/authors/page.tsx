@@ -1,4 +1,4 @@
-import AuthorsList from "../components/AuthorsList";
+import AuthorsList from "../../modules/authors/ui/AuthorsList";
 
 export default function AuthorsPage() {
   return (
