@@ -1,11 +1,11 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useParams } from "next/navigation";
 import BookDetail from "../ui/BookDetail";
 
 export default function BookDetailPage() {
-  const router = useRouter();
-  const { id } = router.query;
-
-  if (!id) return <div>Loading...</div>;
-
-  return <BookDetail bookId={Number(id)} />;
+  const params = useParams<{ id: string }>();
+  const id = Number(params?.id);
+  if (!id) return <div>Cargando...</div>;
+  return <BookDetail bookId={id} />;
 }

@@ -2,8 +2,7 @@
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { bookSchema, BookFormData } from "@/modules/books/validation/bookSchema";
-import { Book } from "../types/books";
+import { bookSchema, type BookFormData } from "@/modules/books/validation/bookSchema";
 
 type Props = {
   onSubmit: SubmitHandler<BookFormData>;
@@ -12,17 +11,13 @@ type Props = {
   submitLabel?: string;
 };
 
-export default function BookForm({
+export default function BooksForm({
   onSubmit,
   defaultValues,
   isSubmitting = false,
   submitLabel = "Save Book",
 }: Props) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<BookFormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<BookFormData>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
       title: "",

@@ -1,65 +1,65 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Book } from "@/modules/books/types/books";
+import Link from "next/link";
+import { Book as BookModel } from "@/modules/books/types/books";
 
-export default function AuthorsList() {
-  const [books, SetBook] = useState<Book[]>([]);
+const API = "http://127.0.0.1:8080/api";
+
+type Book = BookModel; // para usar tus campos (publishingDate)
+
+export default function BooksList() {
+  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Cargar lista
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8080/api/books");
+        const res = await fetch(`${API}/books`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Book[] = await res.json();
-        SetBook(data);
+        setBooks(data);
       } catch (e: any) {
-        setError(e?.message ?? "No se pudo cargar la lista.");
+        setError(e?.message ?? "No se pudo cargar la lista de libros.");
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
+  const formatDate = (s?: string) => {
+    if (!s) return "";
+    const d = new Date(s);
+    return isNaN(d.getTime()) ? s : d.toLocaleDateString();
+  };
 
   if (loading) return <p>Cargando...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
+  if (!books.length) return <p className="text-gray-600">No hay libros para mostrar.</p>;
 
-  // Convierte 'YYYY-MM-DDTHH:mm:ss.sssZ' a 'YYYY-MM-DD'
-function toYYYYMMDD(s?: string) {
-  if (!s) return "";
-  const i = s.indexOf("T");
-  return i >= 0 ? s.slice(0, i) : s; // si ya viene 'YYYY-MM-DD', lo deja igual
-}
-
-return (
-    <div className="space-y-4">
-      <ul className="divide-y border rounded bg-white">
-        {books.map((a) => (
-          <li key={a.id} className="p-3 flex items-center gap-4">
-
-            <div className="flex items-center gap-4 flex-1">
-
-              <img
-                src={a.image ?? "/Images/Perfil1.png"}
-                alt={`Foto de ${a.title}`}
-                className="w-16 h-16 rounded-full object-cover border"
-              />
-
-              <div>
-                <p className="font-semibold leading-tight">{a.title}</p>
-                <p className="text-sm text-gray-600">{toYYYYMMDD(a.publishingDate)}</p>
-              </div>
-
-            </div>
-            <div className="ml-auto flex gap-2">
-            </div>
-          </li>
-        ))}
-      </ul>
+  return (
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {books.map((b) => (
+        <Link
+          key={b.id}
+          href={`/books/${b.id}`}
+          className="border rounded overflow-hidden hover:shadow transition bg-white"
+        >
+          <div className="aspect-[16/9] bg-gray-100">
+            {b.image && <img src={b.image} alt={b.title} className="w-full h-full object-cover" loading="lazy" />}
+          </div>
+          <div className="p-4">
+            <h3 className="font-semibold">{b.title}</h3>
+            <p className="text-sm text-gray-700 mt-1">
+              {b.description ? (b.description.length > 160 ? b.description.slice(0, 160) + "…" : b.description) : "Sin descripción"}
+            </p>
+            <p className="text-xs text-gray-500 mt-2">
+              Publicación: {formatDate(b.publishingDate)}
+            </p>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 }
