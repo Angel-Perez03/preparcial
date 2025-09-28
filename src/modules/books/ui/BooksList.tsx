@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Book as BookModel } from "@/modules/books/types/books";
 
-const API = "http://127.0.0.1:8080/api";
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+
 
 type Book = BookModel; // para usar tus campos (publishingDate)
 

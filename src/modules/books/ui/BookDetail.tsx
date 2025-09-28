@@ -6,7 +6,8 @@ import { Review as ReviewModel } from "@/modules/books/types/Review";
 import ReviewForm from "@/modules/books/ui/ReviewForm";
 import type { ReviewFormData } from "@/modules/books/validation/reviewSchema";
 
-const API = "http://127.0.0.1:8080/api";
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+
 
 type Review = ReviewModel;
 type Book = BookModel & { reviews?: Review[] };

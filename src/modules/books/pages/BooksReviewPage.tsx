@@ -5,7 +5,8 @@ import { useState } from "react";
 import BookReviewsList, { type Review } from "@/modules/books/ui/BooksReviewList";
 import ReviewForm, { type ReviewFormData } from "@/modules/books/ui/ReviewForm";
 
-const API = "http://127.0.0.1:8080/api";
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+
 
 export default function BookReviewsPage() {
   const { id } = useParams<{ id: string }>();
